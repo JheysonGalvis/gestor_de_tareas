@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Proyectos | Tablero Kanban</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Favicon SVG con gradiente azul y violeta -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%237c3aed%22><path d=%22M3 3h7v18H3zm11 0h7v10h-7zm0 14h7v4h-7z%22/></svg>">
+</head>
+<body>
+
+  <!-- Fondo ambiental con resplandor sutil (Glow FX) -->
+  <div class="ambient-glow glow-blue"></div>
+  <div class="ambient-glow glow-violet"></div>
+
+  <!-- Encabezado principal de la aplicación -->
+  <header class="app-header">
+    <div class="header-container">
+      
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="5" height="18" rx="1.5"></rect>
+            <rect x="11" y="3" width="5" height="11" rx="1.5"></rect>
+            <rect x="19" y="3" width="5" height="15" rx="1.5"></rect>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-badge">KANBAN WORKSPACE</div>
+          <h1 class="app-title">Gestor de Proyectos</h1>
+        </div>
+      </div>
+
+      <!-- Acciones de cabecera: Minimalistas y directas -->
+      <div class="header-actions">
+        <button id="btn-open-modal" class="btn btn-primary" title="Crear una nueva tarea">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nueva Tarea
+        </button>
+        <button id="btn-clear-board" class="btn btn-outline" title="Limpiar todo el tablero">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          Limpiar Tablero
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Contenedor del tablero Kanban -->
+  <main class="board-container">
+    <div class="kanban-board">
+
+      <!-- Columna 1: Pendiente -->
+      <section class="kanban-column" data-column="pending">
+        <div class="column-header column-header-pending">
+          <div class="column-title-group">
+            <span class="column-indicator indicator-pending"></span>
+            <h2 class="column-title">Pendiente</h2>
+          </div>
+          <span class="task-count" id="count-pending">0</span>
+        </div>
+        <div class="task-list" id="list-pending">
+          <!-- Las tareas se renderizan dinámicamente con JavaScript -->
+        </div>
+      </section>
+
+      <!-- Columna 2: En progreso -->
+      <section class="kanban-column" data-column="in-progress">
+        <div class="column-header column-header-in-progress">
+          <div class="column-title-group">
+            <span class="column-indicator indicator-in-progress"></span>
+            <h2 class="column-title">En progreso</h2>
+          </div>
+          <span class="task-count" id="count-in-progress">0</span>
+        </div>
+        <div class="task-list" id="list-in-progress">
+          <!-- Las tareas se renderizan dinámicamente con JavaScript -->
+        </div>
+      </section>
+
+      <!-- Columna 3: Hecho -->
+      <section class="kanban-column" data-column="done">
+        <div class="column-header column-header-done">
+          <div class="column-title-group">
+            <span class="column-indicator indicator-done"></span>
+            <h2 class="column-title">Hecho</h2>
+          </div>
+          <span class="task-count" id="count-done">0</span>
+        </div>
+        <div class="task-list" id="list-done">
+          <!-- Las tareas se renderizan dinámicamente con JavaScript -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal / Popup para Crear y Editar Tareas -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-tag" id="modal-tag">DETALLES</span>
+          <h3 class="modal-title" id="task-modal-title">Editar Tarea</h3>
+        </div>
+        <button class="btn-close-modal" id="btn-close-modal" aria-label="Cerrar modal">&times;</button>
+      </div>
+
+      <form id="task-form" class="task-form">
+        <!-- Campo oculto para el ID de la tarea cuando se edita -->
+        <input type="hidden" id="task-id" value="">
+
+        <div class="form-group">
+          <label for="task-title" class="form-label">Título de la tarea <span class="required">*</span></label>
+          <input type="text" id="task-title" class="form-control" placeholder="Ej: Diseñar interfaz oscura moderna..." required maxlength="80">
+        </div>
+
+        <div class="form-group">
+          <label for="task-desc" class="form-label">Descripción</label>
+          <textarea id="task-desc" class="form-control" rows="4" placeholder="Escribe los detalles o notas de esta tarea..." maxlength="300"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="task-column-select" class="form-label">Estado / Columna</label>
+          <select id="task-column-select" class="form-control">
+            <option value="pending">Pendiente</option>
+            <option value="in-progress">En progreso</option>
+            <option value="done">Hecho</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-modal-delete" id="btn-modal-delete" title="Eliminar tarea">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Eliminar
+          </button>
+          <div class="modal-footer-actions">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="btn-submit-task">Guardar Cambios</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación para limpiar el tablero -->
+  <div class="modal-overlay" id="confirm-modal">
+    <div class="modal-dialog modal-dialog-sm">
+      <div class="modal-header">
+        <h3 class="modal-title">¿Limpiar todo el tablero?</h3>
+        <button class="btn-close-modal" id="btn-close-confirm" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-message">
+          Se eliminarán permanentemente todas las tareas de las columnas. Esta acción no se puede deshacer.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-confirm">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btn-confirm-clear">Sí, limpiar todo</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
