@@ -1,5 +1,5 @@
 ### PROMPT CREAR PRIMERA APP ###
-- Crea un sitio web y despliegalo en local. Debe ser un sitio que contenga informacion de lo que es la IA Generativa. En el sitio web solo debe existir una página (la home) y que haya botones o menus pero que al hacer click no lleven a ninguna parte. Los estilos y colores de la página los puedes copiar de los que tengo actualmente en mi sitio web: https://ivanalsigo.com
+- Crea un sitio web y despliegalo en local. Debe ser un sitio que contenga informacion de lo que es la IA Generativa. En el sitio web solo debe existir una página (la home) y que haya botones o menus pero que al hacer click no lleven a ninguna parte. Los estilos y colores de la página los puedes copiar de los que tengo actualmente en mi sitio web: https://jheysongalvis.github.io/portafolio_2023/
 Usa HTML, CSS i JS. No uses otros lenguajes.
 
 ### PROMPT CREAR TASK MANAGER ###
